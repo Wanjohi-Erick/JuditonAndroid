@@ -49,7 +49,7 @@ public class Login extends AppCompatActivity {
         apiRequest.login(username, password, Endpoints.loginApi, new ApiRequests.LoginCallback() {
             @Override
             public void onLoginSuccess(String authToken) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), Dashboard.class));
             }
 
             @Override

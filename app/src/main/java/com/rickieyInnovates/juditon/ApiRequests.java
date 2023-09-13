@@ -2,6 +2,7 @@ package com.rickieyInnovates.juditon;
 
 import android.content.Context;
 import android.util.Log;
+import androidx.appcompat.app.AlertDialog;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -58,7 +59,7 @@ public class ApiRequests {
         requestQueue.add(jsonRequest);
     }
 
-    public void makeAuthenticatedRequest(final Context context, final String url, final Callback callback) {
+    public void makeAuthenticatedGetRequest(final Context context, final String url, final Callback callback) {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 callback::onSuccess,
                 callback::onError) {
@@ -71,6 +72,27 @@ public class ApiRequests {
         };
 
         requestQueue.add(stringRequest);
+    }
+
+    public void makeAuthenticatedPostRequest(final JSONObject requestBody, final String url, final Callback callback) {
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, requestBody,
+                response -> {
+                    Log.i(TAG, "makeAuthenticatedPostRequest: " + response);
+                    callback.onSuccess(String.valueOf(response));
+                },
+                error -> {
+                    Log.e(TAG, error.getMessage());
+                    callback.onError(error);
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + tokenManager.getAuthToken());
+                return headers;
+            }
+        };
+
+        requestQueue.add(jsonRequest);
     }
 
     public interface Callback {
